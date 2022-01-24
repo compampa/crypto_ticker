@@ -1,0 +1,25 @@
+<div style="display: flex;">
+<form name="pairMaker"> 
+  <label for="firstVal">Coin</label>
+  <input type="text" name="firstVal" placeholder="code of your coin">
+  <label for="secondVal">pair</label>
+  <input type="text" name="secondVal" placeholder="pair for the coin">
+  <input type="submit">
+</form>
+</div>
+
+<div class="cryptoContainer" style="display: flex">
+
+</div>
+{{#if allUsers}}
+<div>
+  <ul>
+{{#each allUsers}}
+    <a href="/user/{{this.id}}">
+      <li id="{{this.id}}">{{this.login}}</li>
+    </a>
+{{/each}}
+  </ul>
+</div>
+{{/if}}
+<script defer src="/js/index.js"></script>

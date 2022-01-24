@@ -1,0 +1,197 @@
+
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
+  <script src="https://cdn.anychart.com/releases/v8/js/anychart-annotations.min.js"></script>
+  <script src="https://cdn.anychart.com/csv-data/orcl-daily-short.js"></script>
+  <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+  <script src="https://cdn.anychart.com/csv-data/empty_data(2009-2010).js"></script>
+  <link href="https://cdn.anychart.com/playground-css/annotated/annotated-title.css" type="text/css" rel="stylesheet">
+  <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+  <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+  <style type="text/css">
+
+    html,
+    body,
+    #container {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  
+</style>
+  
+  <div id="container">
+    
+    <div class="container-title">
+      
+      <p>
+        See also
+        
+        <a href="https://www.anychart.com/products/anystock/drawing_tools/" target="_blank">Drawing Tools and
+          Annotations Demo</a>
+      
+      </p>
+    
+    </div>
+  
+  </div>
+  
+
+  <script>
+
+    anychart.onDocumentReady(function () {
+      // The data that have been used for this sample can be taken from the CDN
+      // https://cdn.anychart.com/csv-data/orcl-daily-short.js
+      // https://cdn.anychart.com/csv-data/empty_data(2009-2010).js
+
+      // create data tables on loaded data
+      var orclDataTable = anychart.data.table();
+      orclDataTable.addData(get_orcl_daily_short_data()); 
+
+      var emptyDataTable = anychart.data.table();
+      emptyDataTable.addData(get_empty_data()); 
+
+      // create stock chart
+      var chart = anychart.stock();
+
+      // set chart title
+      chart.title('Annotated Candlestick Chart');
+
+      // set chart padding
+      chart.padding([15, 50, 57, 50]);
+
+      // create plot on the chart
+      var plot = chart.plot();
+
+      // grid settings
+      plot.yGrid(true).xGrid(true).xMinorGrid(true).yMinorGrid(true);
+
+      // format legend items
+      plot.legend().itemsFormatter(function (items) {
+        items.splice(1, 1);
+        // return items array
+        return items;
+      });
+
+      var ORCL = plot.candlestick(
+        orclDataTable.mapAs({
+          open: 1,
+          high: 2,
+          low: 3,
+          close: 4
+        })
+      );
+      ORCL.name('ORCL');
+      ORCL.legendItem().iconType('rising-falling');
+      ORCL.tooltip().format(function () {
+        if (this.open === 0 && isNaN(this.close)) {
+          return (
+            '<span>' +
+            this.seriesName +
+            '</span><br/>' +
+            '<span style="color: #ccc">Open</span>: undefined' +
+            '<br/><span style="color: #ccc">High</span>: undefined' +
+            '<br/><span style="color: #ccc">Low</span>: undefined' +
+            '<br/><span style="color: #ccc">Close</span>: undefined'
+          );
+        }
+        return (
+          '<span>' +
+          this.seriesName +
+          '</span><br/>' +
+          '<span style="color: #ccc">Open</span>: ' +
+          this.open +
+          '<br/><span style="color: #ccc">High</span>: ' +
+          this.high +
+          '<br/><span style="color: #ccc">Low</span>: ' +
+          this.low +
+          '<br/><span style="color: #ccc">Close</span>: ' +
+          this.close
+        );
+      });
+
+      // create plot empty series with mapped data
+      plot
+        .line()
+        .data(
+          emptyDataTable.mapAs({
+            value: 1
+          })
+        )
+        .stroke('none')
+        .tooltip(false);
+
+      var annotation = plot.annotations();
+      // create annotation andrewsPitchfork
+      annotation.andrewsPitchfork({
+        // X - part of the first anchor
+        xAnchor: '2008-02-17',
+        // Y - part of the first anchor
+        valueAnchor: 18.18,
+        // X - part of the second anchor
+        secondXAnchor: '2008-08-03',
+        // Y - part of the second anchor
+        secondValueAnchor: 23.62,
+        // X - part of the third anchor
+        thirdXAnchor: '2009-03-08',
+        // Y - part of the third anchor
+        thirdValueAnchor: 13.8,
+        // set stroke settings
+        stroke: '1.5 #FA8072',
+        // set hover stroke settings
+        hovered: {
+          stroke: '2 #FA8072'
+        }
+      });
+
+      // create annotation rectangle
+      annotation.rectangle({
+        // X - part of the first anchor
+        xAnchor: '2009-03-29',
+        // Y - part of the first anchor
+        valueAnchor: 17.25,
+        // X - part of the second anchor
+        secondXAnchor: '2009-12-25',
+        // Y - part of the second anchor
+        secondValueAnchor: 22,
+        // set stroke settings
+        stroke: '3 #FADA72',
+        // set fill settings
+        fill: '#FADA72 0.25',
+        // set hover stroke settings
+        hovered: {
+          stroke: '3 #FADA72'
+        }
+      });
+
+      // create scroller series with mapped data
+      chart.scroller().candlestick(
+        orclDataTable.mapAs({
+          open: 1,
+          high: 2,
+          low: 3,
+          close: 4
+        })
+      );
+      chart.tooltip().useHtml(true);
+      // set container id for the chart
+      chart.container('container');
+      // initiate chart drawing
+      chart.draw();
+
+      // create range picker
+      var rangePicker = anychart.ui.rangePicker();
+      // init range picker
+      rangePicker.render(chart);
+
+      // create range selector
+      var rangeSelector = anychart.ui.rangeSelector();
+      // init range selector
+      rangeSelector.render(chart);
+    });
+  
+</script>
+                

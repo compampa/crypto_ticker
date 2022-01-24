@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/style.css">
+  <title>CryptoTicker</title>
+</head>
+<body>
+  <header>
+    <h1 style="text-align: center;">
+    Howdy {{#if name}}{{name}}{{else}}guest{{/if}}
+    </h1>
+  </header>
+  <nav>
+    <ul style="display: flex; list-style: none;">
+      {{#if name}}
+      <li style="margin-left: 1em;"><a href="/">Home</a></li>
+      <li style="margin-left: 1em;"><a href="/user/logout">Logout</a></li>
+      {{else}}
+      <li style="margin-left: 1em;"><a href="/">Home</a></li>
+      <li style="margin-left: 1em;"><a href="/user/login">Login</a></li>
+      <li style="margin-left: 1em;"><a href="/user/registration">Registration</a></li>
+      {{/if}}
+    </ul>
+  </nav>
+  {{{body}}}
+</body>
+</html>
